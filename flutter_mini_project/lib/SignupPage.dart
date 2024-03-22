@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,20 +16,20 @@ class _LoginPageState extends State<LoginPage> {
               image: AssetImage('assets/background.png'), fit: BoxFit.cover)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: LoginForm(),
+        body: SignupForm(),
       ),
     );
   }
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignupForm extends StatefulWidget {
+  const SignupForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignupForm> createState() => _SignupFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignupFormState extends State<SignupForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -40,19 +40,21 @@ class _LoginFormState extends State<LoginForm> {
         Container(
           padding: EdgeInsets.only(left: 35, top: 130),
           child: Text(
-            'InterviewPro',
+            'InterviewPro ',
             style:
                 TextStyle(color: Color.fromARGB(255, 24, 12, 12), fontSize: 35),
           ),
         ),
-        Container(
-          padding: EdgeInsets.only(left: 35, top: 230),
-          child: Text(
-            'Welcome!\nPlease Login to your account.',
-            style:
-                TextStyle(color: Color.fromARGB(255, 44, 60, 77), fontSize: 22),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            padding: EdgeInsets.only(top: 270),
+            child: Text(
+              'Create Account ',
+              style: TextStyle(
+                  color: Color.fromARGB(255, 44, 60, 77), fontSize: 25),
+            ),
           ),
-        ),
+        ]),
         SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(
@@ -95,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
                       padding: const EdgeInsets.fromLTRB(30, 10, 30, 10)),
                   onPressed: () {},
                   child: Text(
-                    'Login',
+                    'Sign Up',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
                   ),
                 ),
@@ -107,16 +109,9 @@ class _LoginFormState extends State<LoginForm> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, 'signup');
+                          Navigator.pushNamed(context, 'login');
                         },
-                        child: Text('Sign Up',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontSize: 18,
-                            ))),
-                    TextButton(
-                        onPressed: () {},
-                        child: Text('forgot Passowrd',
+                        child: Text('Already have an account?',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                               fontSize: 18,

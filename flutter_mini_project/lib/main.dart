@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter_mini_project/LoginPage.dart';
+import 'package:flutter_mini_project/SignupPage.dart';
 
 void main() {
   runApp(
@@ -27,43 +28,42 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
+      initialRoute: 'login',
       routes: {
-        '/': (context) => const CustomScaffold(
-              child: LoginForm(), // No need to pass title here
-            ),
+        'login': (context) => LoginPage(),
         // '/home' : (context) => MyHomePage(),
-        // '/signup': (context) => SignupPage(),
+        'signup': (context) => SignupPage(),
       },
     );
   }
 }
 
-class CustomScaffold extends StatelessWidget {
-  final Widget child;
+// class CustomScaffold extends StatelessWidget {
+//   final Widget child;
 
-  const CustomScaffold({Key? key, required this.child}) : super(key: key);
+//   const CustomScaffold({Key? key, required this.child}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('InterviewPro'),
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Background image
-          Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/background.png'),
-                    fit: BoxFit.cover)),
-          ),
-          // Child content
-          Positioned.fill(child: child),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+//         title: Text('InterviewPro'),
+//       ),
+//       body: Stack(
+//         fit: StackFit.expand,
+//         children: [
+//           // Background image
+//           Container(
+//             decoration: BoxDecoration(
+//                 image: DecorationImage(
+//                     image: AssetImage('assets/background.png'),
+//                     fit: BoxFit.cover)),
+//           ),
+//           // Child content
+//           Positioned.fill(child: child),
+//         ],
+//       ),
+//     );
+//   }
+// }
