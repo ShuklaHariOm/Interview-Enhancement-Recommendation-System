@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,6 +34,45 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String? _errorMessage;
+
+  Future<void> _login() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:5000/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Login successful
+        // Navigate to next screen or show success message
+        Navigator.pushNamed(context, 'home');
+
+        setState(() {
+          _errorMessage = null; // Clear any previous error message
+        });
+      } else {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final String errorMessage = responseData['error'];
+        setState(() {
+          _errorMessage = errorMessage; // Display error message to user
+        });
+      }
+    } catch (e) {
+      print('Error caught: $e');
+      // Handle network or server errors
+      setState(() {
+        _errorMessage = 'An error occurred. Please try again later.';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,10 +131,15 @@ class _LoginFormState extends State<LoginForm> {
                 SizedBox(
                   height: 30,
                 ),
+                if (_errorMessage != null)
+                  Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(30, 10, 30, 10)),
-                  onPressed: () {},
+                  onPressed: _login,
                   child: Text(
                     'Login',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),

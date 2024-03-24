@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -30,8 +32,59 @@ class SignupForm extends StatefulWidget {
 }
 
 class _SignupFormState extends State<SignupForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  String? _errorMessage;
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      String name = _nameController.text;
+      String email = _emailController.text;
+      String password = _passwordController.text;
+      String confirmPassword = _confirmPasswordController.text;
+
+      // if (password != confirmPassword) {
+      //   // Show error message
+      //   return;
+      // }
+
+      try {
+        final response = await http.post(
+          Uri.parse('http://127.0.0.1:5000/signup'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'name': name,
+            'email': email,
+            'password': password,
+            'confirm_password': confirmPassword,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          _nameController.clear();
+          _emailController.clear();
+          _passwordController.clear();
+          _confirmPasswordController.clear();
+
+          Navigator.pushNamed(context, 'login');
+
+          setState(() {
+            _errorMessage = null; // Clear any previous error message
+          });
+        } else {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          final String errorMessage = responseData['error'];
+          setState(() {
+            _errorMessage = errorMessage; // Display error message to user
+          });
+        }
+      } catch (e) {}
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,73 +108,139 @@ class _SignupFormState extends State<SignupForm> {
             ),
           ),
         ]),
-        SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.4,
-                right: 35,
-                left: 35),
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
+        Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.4,
+                  right: 35,
+                  left: 35),
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
                       fillColor: Color.fromARGB(255, 241, 251, 251),
                       filled: true,
-                      labelText: 'Email',
+                      labelText: 'Name',
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                SizedBox(
-                  height: 18,
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 241, 251, 251),
-                    filled: true,
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
                   ),
-                  obscureText: true,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(30, 10, 30, 10)),
-                  onPressed: () {},
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                  SizedBox(
+                    height: 18,
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, 'login');
-                        },
-                        child: Text('Already have an account?',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontSize: 18,
-                            ))),
-                  ],
-                ),
-              ],
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                        fillColor: Color.fromARGB(255, 241, 251, 251),
+                        filled: true,
+                        labelText: 'Email',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      if (!value.contains('@')) {
+                        return 'Invalid email address';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 18,
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      fillColor: Color.fromARGB(255, 241, 251, 251),
+                      filled: true,
+                      labelText: 'Password',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 18,
+                  ),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: InputDecoration(
+                      fillColor: Color.fromARGB(255, 241, 251, 251),
+                      filled: true,
+                      labelText: 'Confirm Password',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please confirm your password';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  if (_errorMessage != null)
+                    Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 10)),
+                    onPressed: _submitForm,
+                    child: Text(
+                      'Sign Up',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'login');
+                          },
+                          child: Text('Already have an account?',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                fontSize: 18,
+                              ))),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        )
       ],
     );
   }

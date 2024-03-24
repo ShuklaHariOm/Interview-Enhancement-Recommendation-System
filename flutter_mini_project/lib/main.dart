@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter_mini_project/LoginPage.dart';
 import 'package:flutter_mini_project/SignupPage.dart';
+import 'package:flutter_mini_project/home.dart';
 
 void main() {
   runApp(
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'login',
       routes: {
         'login': (context) => LoginPage(),
-        // '/home' : (context) => MyHomePage(),
+        'home': (context) => Home(),
         'signup': (context) => SignupPage(),
       },
     );
