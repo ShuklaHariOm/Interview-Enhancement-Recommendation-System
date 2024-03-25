@@ -13,10 +13,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/background.png'), fit: BoxFit.cover)),
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: Colors.transparent,
         body: LoginForm(),
       ),
@@ -79,16 +79,16 @@ class _LoginFormState extends State<LoginForm> {
     return Stack(
       children: [
         Container(
-          padding: EdgeInsets.only(left: 35, top: 130),
-          child: Text(
+          padding: const EdgeInsets.only(left: 35, top: 130),
+          child: const Text(
             'InterviewPro',
             style:
                 TextStyle(color: Color.fromARGB(255, 24, 12, 12), fontSize: 35),
           ),
         ),
         Container(
-          padding: EdgeInsets.only(left: 35, top: 230),
-          child: Text(
+          padding: const EdgeInsets.only(left: 35, top: 230),
+          child: const Text(
             'Welcome!\nPlease Login to your account.',
             style:
                 TextStyle(color: Color.fromARGB(255, 44, 60, 77), fontSize: 22),
@@ -107,20 +107,20 @@ class _LoginFormState extends State<LoginForm> {
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 241, 251, 251),
+                      fillColor: const Color.fromARGB(255, 241, 251, 251),
                       filled: true,
                       labelText: 'Email',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10))),
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 18,
                 ),
                 TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    fillColor: Color.fromARGB(255, 241, 251, 251),
+                    fillColor: const Color.fromARGB(255, 241, 251, 251),
                     filled: true,
                     labelText: 'Password',
                     border: OutlineInputBorder(
@@ -128,7 +128,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   obscureText: true,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 if (_errorMessage != null)
@@ -140,12 +140,12 @@ class _LoginFormState extends State<LoginForm> {
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(30, 10, 30, 10)),
                   onPressed: _login,
-                  child: Text(
+                  child: const Text(
                     'Login',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Row(
@@ -155,14 +155,14 @@ class _LoginFormState extends State<LoginForm> {
                         onPressed: () {
                           Navigator.pushNamed(context, 'signup');
                         },
-                        child: Text('Sign Up',
+                        child: const Text('Sign Up',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                               fontSize: 18,
                             ))),
                     TextButton(
                         onPressed: () {},
-                        child: Text('forgot Passowrd',
+                        child: const Text('forgot Passowrd',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                               fontSize: 18,

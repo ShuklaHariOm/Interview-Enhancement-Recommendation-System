@@ -8,7 +8,7 @@ void main() {
   runApp(
     DevicePreview(
       enabled: true,
-      builder: (context) => MyApp(),
+      builder: (context) => const MyApp(),
     ),
   );
 }
@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 207, 236, 250)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 207, 236, 250)),
         useMaterial3: true,
       ),
       // home: const MyHomePage(title: 'InterviewPro'),
@@ -31,9 +31,9 @@ class MyApp extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       initialRoute: 'login',
       routes: {
-        'login': (context) => LoginPage(),
-        'home': (context) => Home(),
-        'signup': (context) => SignupPage(),
+        'login': (context) => const LoginPage(),
+        'home': (context) => const Home(),
+        'signup': (context) => const SignupPage(),
       },
     );
   }

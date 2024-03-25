@@ -13,10 +13,10 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/background.png'), fit: BoxFit.cover)),
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: Colors.transparent,
         body: SignupForm(),
       ),
@@ -91,8 +91,8 @@ class _SignupFormState extends State<SignupForm> {
     return Stack(
       children: [
         Container(
-          padding: EdgeInsets.only(left: 35, top: 130),
-          child: Text(
+          padding: const EdgeInsets.only(left: 35, top: 130),
+          child: const Text(
             'InterviewPro ',
             style:
                 TextStyle(color: Color.fromARGB(255, 24, 12, 12), fontSize: 35),
@@ -100,8 +100,8 @@ class _SignupFormState extends State<SignupForm> {
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Container(
-            padding: EdgeInsets.only(top: 270),
-            child: Text(
+            padding: const EdgeInsets.only(top: 270),
+            child: const Text(
               'Create Account ',
               style: TextStyle(
                   color: Color.fromARGB(255, 44, 60, 77), fontSize: 25),
@@ -123,7 +123,7 @@ class _SignupFormState extends State<SignupForm> {
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 241, 251, 251),
+                      fillColor: const Color.fromARGB(255, 241, 251, 251),
                       filled: true,
                       labelText: 'Name',
                       border: OutlineInputBorder(
@@ -136,13 +136,13 @@ class _SignupFormState extends State<SignupForm> {
                       return null;
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 18,
                   ),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                        fillColor: Color.fromARGB(255, 241, 251, 251),
+                        fillColor: const Color.fromARGB(255, 241, 251, 251),
                         filled: true,
                         labelText: 'Email',
                         border: OutlineInputBorder(
@@ -158,13 +158,13 @@ class _SignupFormState extends State<SignupForm> {
                       return null;
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 18,
                   ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 241, 251, 251),
+                      fillColor: const Color.fromARGB(255, 241, 251, 251),
                       filled: true,
                       labelText: 'Password',
                       border: OutlineInputBorder(
@@ -178,13 +178,13 @@ class _SignupFormState extends State<SignupForm> {
                       return null;
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 18,
                   ),
                   TextFormField(
                     controller: _confirmPasswordController,
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 241, 251, 251),
+                      fillColor: const Color.fromARGB(255, 241, 251, 251),
                       filled: true,
                       labelText: 'Confirm Password',
                       border: OutlineInputBorder(
@@ -201,7 +201,7 @@ class _SignupFormState extends State<SignupForm> {
                       return null;
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   if (_errorMessage != null)
@@ -213,13 +213,13 @@ class _SignupFormState extends State<SignupForm> {
                     style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.fromLTRB(30, 10, 30, 10)),
                     onPressed: _submitForm,
-                    child: Text(
+                    child: const Text(
                       'Sign Up',
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Row(
@@ -229,7 +229,7 @@ class _SignupFormState extends State<SignupForm> {
                           onPressed: () {
                             Navigator.pushNamed(context, 'login');
                           },
-                          child: Text('Already have an account?',
+                          child: const Text('Already have an account?',
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
                                 fontSize: 18,
