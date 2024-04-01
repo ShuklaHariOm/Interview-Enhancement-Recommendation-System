@@ -34,6 +34,8 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isAuthenticated = false;
+
   String? _errorMessage;
 
   Future<void> _login() async {
@@ -53,6 +55,7 @@ class _LoginFormState extends State<LoginForm> {
       if (response.statusCode == 200) {
         // Login successful
         // Navigate to next screen or show success message
+
         Navigator.pushNamed(context, 'home');
 
         setState(() {
@@ -64,6 +67,23 @@ class _LoginFormState extends State<LoginForm> {
         setState(() {
           _errorMessage = errorMessage; // Display error message to user
         });
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text(errorMessage),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (e) {
       print('Error caught: $e');
@@ -71,6 +91,23 @@ class _LoginFormState extends State<LoginForm> {
       setState(() {
         _errorMessage = 'An error occurred. Please try again later.';
       });
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('An error occurred. Please try again later.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

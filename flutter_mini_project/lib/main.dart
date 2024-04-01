@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter_mini_project/LoginPage.dart';
 import 'package:flutter_mini_project/SignupPage.dart';
@@ -32,10 +34,65 @@ class MyApp extends StatelessWidget {
       initialRoute: 'login',
       routes: {
         'login': (context) => LoginPage(),
-        'home': (context) => Home(),
+        'home': (context) => FutureBuilder(
+              future: checkLoginStatus(),
+              builder: (context, AsyncSnapshot<bool> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Scaffold(
+                      body: Center(child: CircularProgressIndicator()));
+                } else {
+                  if (snapshot.hasData && snapshot.data!) {
+                    return Home();
+                  } else {
+                    // User is not logged in, redirect to login page
+                    WidgetsBinding.instance!.addPostFrameCallback((_) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Please Login'),
+                            content:
+                                Text('You need to log in to access this page.'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.pushReplacementNamed(
+                                      context, 'login');
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    });
+                    return SizedBox();
+                  }
+                }
+              },
+            ),
         'signup': (context) => SignupPage(),
       },
     );
+  }
+
+  Future<bool> checkLoginStatus() async {
+    try {
+      final response =
+          await http.get(Uri.parse('http://127.0.0.1:5000/check_login'));
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final bool isLoggedIn = responseData['isLoggedIn'];
+        return isLoggedIn;
+      } else {
+        // Handle server error
+        return false;
+      }
+    } catch (e) {
+      // Handle network or other errors
+      return false;
+    }
   }
 }
 
