@@ -4,12 +4,15 @@ from flask_cors import CORS
 import sqlite3
 import jwt
 from datetime import datetime, timezone, timedelta
+import pandas as pd
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 JWT_SECRET_KEY = 'abcdef#$%^'
 JWT_ALGORITHM = 'HS256'
 JWT_EXPIRATION_DELTA = timedelta(days=1)
+
+dataset = pd.read_csv('dataset.csv')
 
 def generate_token(user_id):
     payload = {
@@ -114,6 +117,11 @@ def check_login():
             print('User ID:', user_id)
             return jsonify({'logged_in': True}), 200
     return jsonify({'logged_in': False}), 200
+
+@app.route('/subjects')
+def get_subjects():
+    subjects = dataset['Domain'].unique()
+    return jsonify(subjects.tolist())
 
 if __name__ == '__main__':
     app.run(debug=True)
