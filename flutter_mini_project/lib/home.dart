@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mini_project/TestPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -111,8 +112,14 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
         child: ElevatedButton(
-          onPressed: _submitSubjects,
-          child: Text('Submit'),
+          onPressed: () {
+            _submitSubjects;
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TestPage()),
+            );
+          },
+          child: const Text('Submit'),
         ),
       ),
     );
