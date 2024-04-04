@@ -5,6 +5,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter_mini_project/LoginPage.dart';
 import 'package:flutter_mini_project/SignupPage.dart';
 import 'package:flutter_mini_project/home.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
 void main() {
   runApp(
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
                       body: Center(child: CircularProgressIndicator()));
                 } else {
                   if (snapshot.hasData && snapshot.data!) {
-                    return Home();
+                    return const Home();
                   } else {
                     // User is not logged in, redirect to login page
                     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -79,18 +80,31 @@ class MyApp extends StatelessWidget {
 
   Future<bool> checkLoginStatus() async {
     try {
-      final response =
-          await http.get(Uri.parse('http://127.0.0.1:5000/check_login'));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token =
+          prefs.getString('token'); // Retrieve token from SharedPreferences
+      print('Token: $token');
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:5000/check_login'),
+        headers: {
+          'Authorization':
+              'Bearer $token', // Include token in the request headers
+        },
+      );
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        final bool isLoggedIn = responseData['isLoggedIn'];
+
+        final bool isLoggedIn = responseData['logged_in'];
+        print('Login status: $responseData');
         return isLoggedIn;
       } else {
         // Handle server error
+        print('Server error: ${response.statusCode}');
         return false;
       }
     } catch (e) {
       // Handle network or other errors
+      print('Error: $e');
       return false;
     }
   }

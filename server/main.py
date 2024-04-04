@@ -1,30 +1,44 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify
 import bcrypt
 from flask_cors import CORS
 import sqlite3
+import jwt
+from datetime import datetime, timezone, timedelta
 
 app = Flask(__name__)
-CORS(app)
-app.secret_key = b'abcdefghi'
+CORS(app, supports_credentials=True)
+JWT_SECRET_KEY = 'abcdef#$%^'
+JWT_ALGORITHM = 'HS256'
+JWT_EXPIRATION_DELTA = timedelta(days=1)
 
-def is_logged_in():
-    return 'user_id' in session
+def generate_token(user_id):
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.now(timezone.utc) + JWT_EXPIRATION_DELTA
+    }
+    try:
+        token = jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+        # print("Token generated successfully:", token)
+        return token
+    except jwt.PyJWTError as e:
+        print("Error generating token:", e)
+        return None
 
-@app.route('/check_login', methods=['GET'])
-def check_login():
-    if is_logged_in():
-        return jsonify({'logged_in': True}), 200
-    else:
-        return jsonify({'logged_in': False}), 200
-
+def verify_token(token):
+    try:
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+        return payload
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+    
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.json
     name = data.get('name')
     email = data.get('email')
     password = data.get('password')
-
-    print(name)
 
     confirm_password = data.get('confirm_password')
     if password != confirm_password:
@@ -70,23 +84,36 @@ def login():
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), stored_salt.encode('utf-8'))
 
             if hashed_password == user[3]:
-                session['user_id'] = user[0]
-                return jsonify({'message': 'Login successful'}), 200
+                user_id = user[0]
+                token = generate_token(user_id)
+                return jsonify({'message': 'Login successful', 'token': token}), 200
             else:
                 return jsonify({'error': 'Invalid email or password'}), 401
         else:
             return jsonify({'error': 'User not found'}), 404
+    except jwt.ExpiredSignatureError:
+        return jsonify({'error': 'Expired token'}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'error': 'Invalid token'}), 401
     except Exception as e:
+        print(e)
         return jsonify({'error': 'An error occurred while processing your request'}), 500
     finally:
         if conn:
             conn.close()
 
-
-@app.route('/logout', methods=['POST'])
-def logout():
-    session.pop('user_id', None)
-    return jsonify({'message': 'Logout successful'}), 200
+@app.route('/check_login', methods=['GET'])
+def check_login():
+    token = request.headers.get('Authorization')
+    print(token)
+    if token:
+        token = token.split(' ')[1]
+        payload = verify_token(token)
+        if payload:
+            user_id = payload.get('user_id')
+            print('User ID:', user_id)
+            return jsonify({'logged_in': True}), 200
+    return jsonify({'logged_in': False}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
