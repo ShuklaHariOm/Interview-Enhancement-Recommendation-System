@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> storeToken(String token) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+  print('Token stored successfully');
+}
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,6 +61,11 @@ class _LoginFormState extends State<LoginForm> {
 
       if (response.statusCode == 200) {
         // Login successful
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final String token = responseData['token'];
+
+        // Store token for future authenticated requests
+        storeToken(token);
         // Navigate to next screen or show success message
 
         Navigator.pushNamed(context, 'home');
