@@ -94,10 +94,10 @@ def login():
                 return jsonify({'error': 'Invalid email or password'}), 401
         else:
             return jsonify({'error': 'User not found'}), 404
-    except jwt.ExpiredSignatureError:
-        return jsonify({'error': 'Expired token'}), 401
-    except jwt.InvalidTokenError:
-        return jsonify({'error': 'Invalid token'}), 401
+    # except jwt.ExpiredSignatureError:
+    #     return jsonify({'error': 'Expired token'}), 401
+    # except jwt.InvalidTokenError:
+    #     return jsonify({'error': 'Invalid token'}), 401
     except Exception as e:
         print(e)
         return jsonify({'error': 'An error occurred while processing your request'}), 500
