@@ -123,5 +123,8 @@ def get_subjects():
     subjects = dataset['Domain'].unique()
     return jsonify(subjects.tolist())
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/crash')
+def main():
+    raise Exception()
+
+app.run(debug=True)
